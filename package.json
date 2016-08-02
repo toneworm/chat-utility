@@ -1,0 +1,21 @@
+{
+  "name": "chat-utility",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "create": "node ./dist/create-json.js",
+    "fav-words": "node ./dist/favourite-words.js",
+    "build": "babel src -d dist",
+    "start": "node index.js",
+    "buildrun": "babel src -d dist && node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-cli": "^6.10.1"
+  },
+  "devDependencies": {
+    "airtable": "^0.4.2"
+  }
+}
