@@ -69,7 +69,7 @@ class ChatToJson {
   }
 
   validateContent(str) {
-    str = str.replace(/[\r\n]+/g, '');
+    str = str.replace(/[\r\n]+/g, '').trim();
     if (str.length && str !== "<image omitted>" && str !== "<audio omitted>" && str !== "<video omitted>") {
       return str;
     }

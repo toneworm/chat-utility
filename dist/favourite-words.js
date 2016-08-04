@@ -29,10 +29,10 @@ class FavouriteWords {
     // split words to users
     this.words = {};
     this.userWords = {};
+    this.allWords = {};
 
     for (var i = 0, len = entries.length; i < len; i++) {
-      let entry = entries[i],
-          entryWords = this.splitSentence(entry);
+      this.splitSentence(entries[i]);
     }
 
     this.showFavouriteWords(this.words);
@@ -54,20 +54,33 @@ class FavouriteWords {
 
   showFavouriteWords(wordsObj) {
 
-    for (var i in wordsObj) {
+    let usersObj = {};
+
+    for (var i = 0, userKeys = Object.keys(wordsObj); i < userKeys.length; i++) {
       // create user obj
       let userWordsObj = {},
-          userWords = wordsObj[i].sort();
+          userWordsArr = wordsObj[userKeys[i]];
 
-      for (var w = 0, len = userWords.length; w < len; w++) {
-        if (!userWordsObj[userWords[w]]) {
-          userWordsObj[userWords[w]] = 0;
+      for (var w = 0, len = userWordsArr.length; w < len; w++) {
+        if (!userWordsObj[userWordsArr[w]]) {
+          userWordsObj[userWordsArr[w]] = 0;
         }
 
-        userWordsObj[userWords[w]] += 1;
+        userWordsObj[userWordsArr[w]] += 1;
       }
 
-      this.userWords[i] = userWordsObj;
+      usersObj[userKeys[i]] = userWordsObj;
+    }
+
+    for (i = 0; i < userKeys.length; i++) {
+      let user = usersObj[userKeys[i]];
+      this.userWords[userKeys[i]] = [];
+      for (let fw = 0, fwKeys = Object.keys(user); fw < fwKeys.length; fw++) {
+        this.userWords[userKeys[i]].push({
+          word: fwKeys[fw],
+          freq: user[fwKeys[fw]]
+        });
+      }
     }
   }
 
