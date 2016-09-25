@@ -1,3 +1,7 @@
 node_modules
 .*
-txt/TCC_25-07-16.txt
+*.txt
+!example.txt
+*.json
+!example.json
+!example-fav-word.json

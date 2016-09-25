@@ -1,56 +1,28 @@
 'use strict';
 
-const fs = require('fs');
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-// filename from argument
-var fullFilename = process.argv.slice(2).toString(),
-    chatToJson;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-let fnArr = fullFilename.split("/"),
-    fn = fnArr[fnArr.length - 1];
+var ChatToJson = function () {
+  function ChatToJson(data) {
+    _classCallCheck(this, ChatToJson);
 
-if (fn) {
-  fs.readFile(`./txt/${ fn }`, 'utf8', (err, data) => {
-    if (err) {
-      throw err;
-    }
-
-    let json = new ChatToJson(data),
-        jsonString = JSON.stringify(json),
-        jsonTarget = `./json/${ fn.slice(0, -4) }.json`;
-
-    if (jsonString && jsonTarget) {
-      fs.writeFile(jsonTarget, jsonString, err => {
-        if (err) {
-          throw err;
-        }
-
-        console.log(`Saved to ${ jsonTarget }.`);
-      });
-    }
-  });
-} else {
-  console.log('No filename specified.');
-}
-
-class ChatToJson {
-  constructor(data) {
-
-    let textArr = data.split('\n'),
+    var textArr = data.split('\n'),
         entriesArr = [];
 
-    for (let i = 0, len = textArr.length; i < len; i++) {
+    for (var i = 0, len = textArr.length; i < len; i++) {
 
       if (textArr[i].length > 22) {
-        let entry = {},
+        var entry = {},
             entryStr = '',
             textStrDateChunk = textArr[i].slice(0, 20),
             textStrTextChunk = textArr[i].slice(22);
 
         // check for colon ( verify is user comment )
-        let textStrTextChunkIndex = textStrTextChunk.indexOf(':');
+        var textStrTextChunkIndex = textStrTextChunk.indexOf(':');
         if (textStrTextChunkIndex >= 0) {
-          let content = this.validateContent(textStrTextChunk.slice(textStrTextChunkIndex + 2));
+          var content = this.validateContent(textStrTextChunk.slice(textStrTextChunkIndex + 2));
 
           if (content) {
             entry.content = content;
@@ -68,30 +40,36 @@ class ChatToJson {
     };
   }
 
-  validateContent(str) {
-    str = str.replace(/[\r\n]+/g, '').trim();
-    if (str.length && str !== "<image omitted>" && str !== "<audio omitted>" && str !== "<video omitted>") {
-      return str;
+  _createClass(ChatToJson, [{
+    key: 'validateContent',
+    value: function validateContent(str) {
+      str = str.replace(/[\r\n]+/g, '').trim();
+      if (str.length && str !== "<image omitted>" && str !== "<audio omitted>" && str !== "<video omitted>") {
+        return str;
+      }
+
+      return null;
     }
+  }, {
+    key: 'formatDate',
+    value: function formatDate(str) {
 
-    return null;
-  }
+      var strToInt = function strToInt(r1, r2) {
+        return parseInt(str.slice(r1, r2));
+      };
 
-  formatDate(str) {
+      var D = strToInt(0, 2),
+          M = strToInt(3, 5) - 1,
+          Y = strToInt(6, 10),
+          h = strToInt(12, 14),
+          m = strToInt(15, 17),
+          s = strToInt(18, 20);
 
-    let strToInt = (r1, r2) => {
-      return parseInt(str.slice(r1, r2));
-    };
+      return new Date(Y, M, D, h, m, s);
+    }
+  }]);
 
-    let D = strToInt(0, 2),
-        M = strToInt(3, 5) - 1,
-        Y = strToInt(6, 10),
-        h = strToInt(12, 14),
-        m = strToInt(15, 17),
-        s = strToInt(18, 20);
-
-    return new Date(Y, M, D, h, m, s);
-  }
-}
+  return ChatToJson;
+}();
 
 module.exports = ChatToJson;

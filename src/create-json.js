@@ -1,38 +1,5 @@
 'use strict';
 
-const fs = require('fs');
-
-// filename from argument
-var fullFilename = process.argv.slice(2).toString(),
-  chatToJson;
-
-let fnArr = fullFilename.split("/"),
-  fn = fnArr[fnArr.length - 1];
-
-if ( fn ) {
-  fs.readFile(`./txt/${fn}`, 'utf8', (err, data) => {
-    if (err) {
-      throw err;
-    }
-
-    let json = new ChatToJson(data),
-      jsonString = JSON.stringify(json),
-      jsonTarget = `./json/${fn.slice(0,-4)}.json`;
-
-    if ( jsonString && jsonTarget ) {
-      fs.writeFile(jsonTarget, jsonString, (err) => {
-        if ( err ) {
-          throw err;
-        }
-
-        console.log(`Saved to ${jsonTarget}.`);
-      });
-    }
-  });
-} else {
-  console.log('No filename specified.');
-}
-
 class ChatToJson {
   constructor(data) {
 

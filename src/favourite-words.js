@@ -1,30 +1,8 @@
 'use strict';
 
-const fs = require('fs');
-
-// filename from argument
-var fullFilename = process.argv.slice(2).toString(),
-  chatToJson;
-
-let fnArr = fullFilename.split("/"),
-  fn = fnArr[fnArr.length - 1];
-
-if ( fn ) {
-  fs.readFile(`./json/${fn}`, 'utf8', (err, data) => {
-    if (err) {
-      throw err;
-    }
-
-    const favWords = new FavouriteWords(data);
-  });
-} else {
-  console.log('No filename specified.');
-}
-
 class FavouriteWords {
   constructor(data) {
-    let json = JSON.parse(data),
-      entries = json.entries;
+    const entries = data.entries;
 
     // split words to users
     this.words = {};
@@ -37,19 +15,7 @@ class FavouriteWords {
 
     this.showFavouriteWords(this.words);
 
-    // write to json file
-    let jsonString = JSON.stringify(this.userWords),
-      jsonTarget = `./json/${fn.slice(0,-5)}-fav-words.json`;
-
-    if ( jsonString && jsonTarget ) {
-      fs.writeFile(jsonTarget, jsonString, (err) => {
-        if ( err ) {
-          throw err;
-        }
-
-        console.log(`Saved to ${jsonTarget}.`);
-      });
-    }
+    return this.userWords;
   }
 
   showFavouriteWords(wordsObj) {
